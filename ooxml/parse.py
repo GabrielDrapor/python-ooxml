@@ -327,11 +327,11 @@ def parse_paragraph(document, par):
             parse_text(document, paragraph, elem)
 
         if elem.tag == _name('{{{m}}}oMath'):
-            _m = doc.Math()
+            _m = doc.Math(elem, tag='oMath')
             paragraph.elements.append(_m)
 
         if elem.tag == _name('{{{m}}}oMathPara'):
-            _m = doc.Math()
+            _m = doc.Math(elem, tag='oMathPara')
             paragraph.elements.append(_m)
 
         if elem.tag == _name('{{{w}}}commentRangeStart'):

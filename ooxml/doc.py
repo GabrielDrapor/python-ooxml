@@ -8,6 +8,8 @@
 
 import six
 import collections
+from dwml import omml
+from lxml import etree
 
 
 class Style(object):
@@ -476,11 +478,24 @@ class Math(Element):
 
     Math elements are not supported at the moment. We just parse them and create empty element."""
 
-    def __init__(self):
-        pass
+    def __init__(self, element, tag):
+        mathml = etree.tostring(element).decode()
+        if tag == 'oMath':
+            mathml = """<m:oMathPara
+                xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"
+                xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"
+                xmlns:w="http://schemas.openxmlformats.org/wordparseingml/2006/main">
+                %s
+            </m:oMathPara>""" % mathml
+
+        latexs = [i.latex for i in omml.load_string(mathml)]
+        if latexs:
+            self.latex = '${0}$'.format(latexs[0])
+        else:
+            self.latex = ''
 
     def value(self):
-        return ''
+        return self.latex
 
 
 class SmartTag(Element):
